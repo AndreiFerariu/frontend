@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabella con Form</title>
+  <!-- Collegamento al CSS di Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Tabella con Form</h2>
+    <table class="table table-striped table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th>id</th>
+          <th>Marca</th>
+          <th>Nome</th>
+          <th>Prezzo</th>
+          <th>Azioni</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>audi</td>
+          <td>a5</td>
+          <td>66666</td>
+          <td>
+            <a href="#" data-toggle="modal" data-target="#showModal" data-id="1">Show</a>
+            <a href="#" data-toggle="modal" data-target="#editModal">Edit</a>
+            <a href="#" data-toggle="modal" data-target="#deleteModal">Delete</a>
+          </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>ferrari</td>
+            <td>m4</td>
+            <td>777</td>
+            <td>
+              <a href="#" data-toggle="modal" data-target="#showModal" data-id="2">Show</a>
+              <a href="#" data-toggle="modal" data-target="#editModal">Edit</a>
+              <a href="#" data-toggle="modal" data-target="#deleteModal">Delete</a>
+            </td>
+          </tr>
+     
+      </tbody>
+    </table>
+    <button id="pulsante" type="button" class="btn btn-primary" data-toggle="modal" data-target="#creaModal">Crea</button>
+    
+    <!-- Modale per mostrare i dettagli -->
+    <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel" aria-hidden="true">
+      <!-- Contenuto -->
+    </div>
+
+    <!-- Modale per modificare -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+      <!-- Contenuto -->
+    </div>
+
+    <!-- Modale per l'eliminazione -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <!-- Contenuto -->
+    </div>
+
+    <!-- Modale per creare -->
+    <div class="modal fade" id="creaModal" tabindex="-1" role="dialog" aria-labelledby="creaModalLabel" aria-hidden="true">
+      <!-- Contenuto -->
+    </div>
+  </div>
+  
+
+</body>
+</html>
