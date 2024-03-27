@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tabella con Form</title>
   <!-- Collegamento al CSS di Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
   <div class="container">
     <h2>Tabella con Form</h2>
-    <table class="table table-striped table-bordered">
+    <table id="tabella" class="table table-striped table-bordered">
       <thead class="thead-dark">
         <tr>
           <th>id</th>
@@ -21,11 +20,12 @@
           <th>Azioni</th>
         </tr>
       </thead>
-      <tbody id="tableBody" onload="getResponseFromServer()">
+      <tbody id="tableBody">
       </tbody>
     </table>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" href="#creaModal">Crea</button>
-
+  
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#aggiungiProdottoModal">Crea</button>
+ 
     <!-- Modale per mostrare i dettagli -->
     <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel" aria-hidden="true">
       <!-- Contenuto -->
@@ -42,17 +42,17 @@
     </div>
 
     <!-- Modale per creare -->
-    <div class="modal fade" id="creaModal" tabindex="-1" role="dialog" aria-labelledby="creaModalLabel" aria-hidden="true">
+    <div class="modal fade" id="aggiungiProdottoModal" tabindex="-1" role="dialog" aria-labelledby="aggiungiProdottoModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="creaModalLabel">Crea Prodotto</h5>
+            <h5 class="modal-title" id="aggiungiProdottoModalLabel">Aggiungi Prodotto</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <form id="creaProdottoForm">
+            <form id="aggiungiProdottoForm">
               <div class="form-group">
                 <label for="marca">Marca:</label>
                 <input type="text" class="form-control" id="marca" name="marca" required>
@@ -70,45 +70,13 @@
           </div>
         </div>
       </div>
-     </div>
-    
-     </div>
     </div>
-
-    <script>
-      // Funzione per eseguire una richiesta GET al server
-      function getResponseFromServer() {
-        fetch('http://localhost:8888/products')
-            .then(response => response.json())
-            .then(data => {
-                // Aggiorna la tabella nel DOM con i dati ricevuti dal server
-                const tableBody = document.querySelector('tbody');
-
-                // Rimuovi le righe esistenti dalla tabella
-                tableBody.innerHTML = '';
-
-                // Itera sui dati ricevuti e crea una riga per ogni record
-                data.forEach(product => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${product.id}</td>
-                        <td>${product.marca}</td>
-                        <td>${product.nome}</td>
-                        <td>${product.prezzo}</td>
-                        <td>
-                            <a href="#" data-toggle="modal" data-target="#showModal" data-id="${product.id}">Show</a>
-                            <a href="#" data-toggle="modal" data-target="#editModal">Edit</a>
-                            <a href="#" data-toggle="modal" data-target="#deleteModal">Delete</a>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            }).catch(error => console.error('Errore:', error));
-      }
-
-      // Esegui la richiesta GET al caricamento della pagina
-      window.onload = getResponseFromServer;
-    </script>
-    
+    </div>
+  </div>
+   <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Collegamento al tuo file JavaScript -->
+  
 </body>
 </html>
+

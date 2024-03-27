@@ -9,7 +9,12 @@ class RequestHandler(BaseHTTPRequestHandler):
     def _set_response(self, status_code=200, content_type='application/json'):
         self.send_response(status_code)
         self.send_header('Content-type', content_type)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'POST, DELETE, PATCH')
         self.end_headers()
+
+    def do_OPTIONS(self):
+        self._set_response()
 
     def do_GET(self):
         if self.path == '/products':
@@ -22,7 +27,6 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_error(404, 'Not Found')
 
     def _handle_get_products(self):
-         self.send_header('Access-Control-Allow-Origin', '*')
         records = Product.fetchAll()
         products_list = []
         for record in records:
@@ -32,9 +36,10 @@ class RequestHandler(BaseHTTPRequestHandler):
         self._set_response()
         response_data = {'data': products_list}
         self.wfile.write(json.dumps(response_data).encode('utf-8'))
+        print(response_data)
 
     def _handle_get_product(self, product_id):
-         self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Origin', '*')
         product = Product.find_id(product_id)
         if product is not None:
             product_dict = self._format_product(product)
@@ -67,7 +72,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_error(404, 'Not Found')
 
     def _handle_create_product(self, post_data):
-         self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Origin', '*')
         try:
             data = json.loads(post_data.decode('utf-8'))
             if 'data' not in data or 'attributes' not in data['data']:
@@ -100,7 +105,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_error(404, 'Not Found')
 
     def _handle_delete_product(self, product):
-         self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Origin', '*')
         try:
      
             if product:
@@ -130,7 +135,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_error(404, 'Not Found')
 
     def _handle_patch_product(self, product, patch_data):
-         self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Origin', '*')
         try:
             data = json.loads(patch_data.decode('utf-8'))
             if 'data' not in data or 'attributes' not in data['data']:
@@ -146,10 +151,12 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_error(400, 'Bad Request - Invalid JSON')       
 
 if __name__ == '__main__':
-    server_address = ('localhost', 8888)
+    server_address = ('localhost', 8881)
     httpd = HTTPServer(server_address, RequestHandler)
     print(f'Starting server on port 8888...')
     httpd.serve_forever()
+
+    
     
 
 
