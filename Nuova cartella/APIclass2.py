@@ -10,7 +10,8 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.send_response(status_code)
         self.send_header('Content-type', content_type)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'POST, DELETE, PATCH')
+        self.send_header('Access-Control-Allow-Methods', 'POST,OPTIONS, GET, DELETE, PATCH')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
 
     def do_OPTIONS(self):
@@ -36,7 +37,6 @@ class RequestHandler(BaseHTTPRequestHandler):
         self._set_response()
         response_data = {'data': products_list}
         self.wfile.write(json.dumps(response_data).encode('utf-8'))
-        print(response_data)
 
     def _handle_get_product(self, product_id):
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -151,14 +151,16 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_error(400, 'Bad Request - Invalid JSON')       
 
 if __name__ == '__main__':
-    server_address = ('localhost', 8881)
+    server_address = ('localhost', 8003)
     httpd = HTTPServer(server_address, RequestHandler)
     print(f'Starting server on port 8888...')
-    httpd.serve_forever()
-
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        pass
+        httpd.server_close()
     
     
-
 
 
 
