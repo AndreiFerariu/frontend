@@ -6,6 +6,8 @@
   <title>Tabella con Form</title>
   <!-- Collegamento al CSS di Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Collegamento a jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="script.js"></script>
   <script src="scriptPost.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -29,10 +31,38 @@
   
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#aggiungiProdottoModal">Crea</button>
  
-    <!-- Modale per mostrare i dettagli -->
-    <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel" aria-hidden="true">
-      <!-- Contenuto -->
+    
+    <!-- Modale per mostrare i dettagli del prodotto -->
+<!-- Modale per mostrare i dettagli del prodotto -->
+<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="showModalTitle">Dettagli Prodotto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="dettaglioProdottoForm">
+          <div class="form-group">
+            <label for="showMarca">Marca:</label>
+            <input type="text" class="form-control" id="showMarca" readonly>
+          </div>
+          <div class="form-group">
+            <label for="showNome">Nome:</label>
+            <input type="text" class="form-control" id="showNome" readonly>
+          </div>
+          <div class="form-group">
+            <label for="showPrezzo">Prezzo:</label>
+            <input type="text" class="form-control" id="showPrezzo" readonly>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
+</div>
+
 
     <!-- Modale per modificare -->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -43,7 +73,6 @@
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
       <!-- Contenuto -->
     </div>
-P
     <!-- Modale per creare -->
     <div class="modal fade" id="aggiungiProdottoModal" tabindex="-1" role="dialog" aria-labelledby="aggiungiProdottoModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -68,8 +97,8 @@ P
                   <label for="prezzo">Prezzo:</label>
                   <input type="number" class="form-control" id="prezzo" name="prezzo" required>
               </div>
-              <!-- Aggiungi onclick="modaleCrea()" per eseguire la funzione quando il pulsante viene cliccato -->
-              <button type="submit" class="btn btn-primary" onclick="modaleCrea()">Salva</button>
+              <!-- Rimozione dell'attributo onclick -->
+              <button type="submit" class="btn btn-primary">Salva</button>
           </form>
           
           </div>
@@ -80,4 +109,3 @@ P
   </div>
 </body>
 </html>
-
