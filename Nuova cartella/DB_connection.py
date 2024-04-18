@@ -17,7 +17,8 @@ class DbManager:
                 port=self.port,
                 user=self.username,
                 password=self.password,
-                database=self.database
+                database=self.database, 
+                #auth_plugin='mysql_native_password'
             )
             return self.connection
         except mysql.connector.Error as e:

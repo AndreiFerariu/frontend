@@ -6,7 +6,8 @@ class Product:
     @staticmethod
     def connection():
         try:
-            db_manager = DbManager("192.168.2.200", 3306, "ferariu_andrei", "masking.assurance.vitiating.", "ferariu_andrei_DBproducts") #cambia 
+            db_manager = DbManager("localhost", 3306, "root", "", "dbproducts")
+            #db_manager = DbManager("localhost", 3306, "root", "", "DBproducts") 
             return db_manager.establish_connection()
         except mysql.connector.Error as e:
             print("Errore durante la connessione al database:", str(e))
@@ -59,6 +60,8 @@ class Product:
                 return None
         except mysql.connector.Error as e:
             print("Errore durante la ricerca del prodotto:", str(e))
+            
+    @staticmethod        
     def find_id_product(id):
         try:
             conn = Product.connection()

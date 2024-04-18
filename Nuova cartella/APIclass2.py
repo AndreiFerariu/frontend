@@ -1,21 +1,16 @@
-# APIclass.py
-
-import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from Products import Product
+import json
 
 class RequestHandler(BaseHTTPRequestHandler):
     
     def _set_response(self, status_code=200, content_type='application/json'):
         self.send_response(status_code)
         self.send_header('Content-type', content_type)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'POST,OPTIONS, GET, DELETE, PATCH')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.send_header('Access-Control-Allow-Origin', '*')  # Abilita CORS per tutti gli origini
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, DELETE, PATCH')  # Abilita i metodi consentiti
+        self.send_header('Access-Control-Allow-Headers', 'Content-type')  # Specifica gli header consentiti
         self.end_headers()
-
-    def do_OPTIONS(self):
-        self._set_response()
 
     def do_GET(self):
         if self.path == '/products':
@@ -26,6 +21,10 @@ class RequestHandler(BaseHTTPRequestHandler):
             self._handle_get_product(product_id)
         else:
             self.send_error(404, 'Not Found')
+            
+    def do_OPTIONS(self):
+        self._set_response()
+
 
     def _handle_get_products(self):
         records = Product.fetchAll()
@@ -39,7 +38,6 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(response_data).encode('utf-8'))
 
     def _handle_get_product(self, product_id):
-        self.send_header('Access-Control-Allow-Origin', '*')
         product = Product.find_id(product_id)
         if product is not None:
             product_dict = self._format_product(product)
@@ -72,13 +70,10 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_error(404, 'Not Found')
 
     def _handle_create_product(self, post_data):
-        self.send_header('Access-Control-Allow-Origin', '*')
         try:
             data = json.loads(post_data.decode('utf-8'))
             if 'data' not in data or 'attributes' not in data['data']:
                 self.send_error(400, 'Bad Request - Incomplete Data Request')
-                
-
             attributes = data['data']['attributes']
             new_product = {
                 'nome': attributes.get('nome', ''),
@@ -87,7 +82,6 @@ class RequestHandler(BaseHTTPRequestHandler):
             }
             product = Product.create_product(new_product)
             product_dict = self._format_product(product)
-
             self._set_response(status_code=201)
             response_data = {'data': product_dict}
             self.wfile.write(json.dumps(response_data).encode('utf-8'))
@@ -100,31 +94,28 @@ class RequestHandler(BaseHTTPRequestHandler):
             product_id = int(parts[2])
             product = Product.find_id_product(product_id)
             self._handle_delete_product(product)
-            
         else:
             self.send_error(404, 'Not Found')
 
     def _handle_delete_product(self, product):
-        self.send_header('Access-Control-Allow-Origin', '*')
         try:
-     
             if product:
                 if product.delete_product():
-                  self._set_response(status_code=204)  # No Content
+                    self._set_response(status_code=204)  # No Content
                 else:
-                  self.send_error(500, 'Failed to delete product')
+                    self.send_error(500, 'Failed to delete product')
             else:
-            # Se il prodotto non esiste, restituisce uno stato 404 (Not Found)
+                # Se il prodotto non esiste, restituisce uno stato 404 (Not Found)
                 self.send_error(404, 'Product Not Found')
         except Exception as e:
-        # In caso di errore interno, restituisce uno stato 500 (Internal Server Error)
+            # In caso di errore interno, restituisce uno stato 500 (Internal Server Error)
             self.send_error(500, f'Internal Server Error: {str(e)}')
 
     def do_PATCH(self):
         if self.path.startswith('/products/'):
             parts = self.path.split('/')
             product_id = int(parts[2])
-            product = Product.find_id(product_id)
+            product = Product.find_id_product(product_id)
             if product:
                 content_length = int(self.headers['Content-Length'])
                 patch_data = self.rfile.read(content_length)
@@ -135,32 +126,32 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_error(404, 'Not Found')
 
     def _handle_patch_product(self, product, patch_data):
-        self.send_header('Access-Control-Allow-Origin', '*')
         try:
             data = json.loads(patch_data.decode('utf-8'))
             if 'data' not in data or 'attributes' not in data['data']:
                 self.send_error(400, 'Bad Request - Incomplete Data Request')
+                return
             attributes = data['data']['attributes']
-            for key, value in attributes.items():
-                if key in product:
-                    product[key] = value
+            product_data = {
+                'marca': attributes.get('marca', product.marca),
+                'nome': attributes.get('nome', product.nome),
+                'prezzo': attributes.get('prezzo', product.prezzo)
+            }
+            product.update_product(product_data)
             self._set_response()
             response_data = {'data': self._format_product(product)}
             self.wfile.write(json.dumps(response_data).encode('utf-8'))
         except json.JSONDecodeError:
-            self.send_error(400, 'Bad Request - Invalid JSON')       
+            self.send_error(400, 'Bad Request - Invalid JSON')
+
+
 
 if __name__ == '__main__':
-    server_address = ('localhost', 8003)
-    httpd = HTTPServer(server_address, RequestHandler)
-    print(f'Starting server on port 8888...')
     try:
+        server_address = ('127.0.0.1', 8000)
+        httpd = HTTPServer(server_address, RequestHandler)
+        print(f'Serving HTTP on {server_address[0]} port {server_address[1]}...')
         httpd.serve_forever()
     except KeyboardInterrupt:
-        pass
-        httpd.server_close()
-    
-    
-
-
-
+        print('^C received, shutting down the server')
+        httpd.socket.close()

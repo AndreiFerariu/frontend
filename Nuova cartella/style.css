@@ -1,0 +1,20 @@
+/* Personalizza il bottone */
+#createButton {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    border-radius: 25px;
+    background-color: #4CAF50; /* Colore verde */
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 9999; /* Assicura che il pulsante sia sopra gli altri contenuti */
+    transition: background-color 0.3s; /* Effetto di transizione */
+}
+
+/* Stile quando il cursore si posiziona sul pulsante */
+#createButton:hover {
+    background-color: #45a049; /* Tonalità più scura del verde */
+}
